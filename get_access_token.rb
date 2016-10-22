@@ -3,7 +3,7 @@
 require 'oauth'
 require 'json'
 
-TokenFile = "oauth_token"
+TokenFile = "oauth_token.json"
 ConsumerKeysFile = "consumer_keys.json"
 
 # Todo: Edit consumer key and secret values in ConsumerKeysFile.
@@ -41,11 +41,18 @@ print ">"
 oauth_verifier = gets.strip
 access_token = request_token.get_access_token(oauth_verifier: oauth_verifier)
 
+tokens_as_json = {
+  consumer_key:       ConsumerKey,
+  consumer_secret:    ConsumerSecret,
+  oauth_token:        access_token.token,
+  oauth_token_secret: access_token.secret
+}
+
 # output
 File.open(TokenFile, "w") do |fp|
-  fp.puts "AccessToken:#{access_token.token}"
-  fp.puts "AccessTokenSecret:#{access_token.secret}"
+  fp.puts tokens_as_json.to_json.to_s
 end
 
 puts "Finished. Access token is stored to #{TokenFile}."
-puts "Please press enterkey to exit."
+puts "Please press Enterkey to exit."
+puts gets
